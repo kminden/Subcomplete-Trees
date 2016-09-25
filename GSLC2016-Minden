@@ -1,0 +1,364 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%Presentation given at Graduate Student Logic Con 2016
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\documentclass[utf8x,xcolor=svgnames]{beamer}
+
+\usepackage{tikz}
+\usepackage[T1]{fontenc}
+%\usepackage[utf8]{inputenc}
+\usepackage{amsmath,amsfonts,amssymb}
+%\usepackage[normalem]{ulem}
+
+%\addtolength{\textwidth}{1.5em}
+%\addtolength{\oddsidemargin}{-0.75em}
+
+\renewcommand{\c}{\mathfrak{c}}
+\renewcommand{\P}{\mathbb{P}}
+\newcommand{\Q}{\mathbb{Q}}
+\DeclareMathOperator{\Add}{Add}
+\DeclareMathOperator{\Coll}{Coll}
+\newcommand{\rest}{\upharpoonright}
+\renewcommand{\diamond}{\diamondsuit}
+\newcommand{\funcs}[2]{{}^{#1}{#2}}
+\newcommand{\jdiamond}%
+{{\mathop{\ooalign{{\Large\(\diamond\)}\cr\hss\raisebox{0.4ex}{\tiny\(\diamond\)}\hss}}}}
+%
+\newcommand{\jd}[2][\kappa]{\jdiamond_{#1,#2}}
+\newcommand{\Ldiamond}%
+{\begin{tikzpicture}[line width={0.4pt},scale=0.02\baselineskip]%
+\draw (0,0)--(1,0)--(0,1.4)--cycle; \end{tikzpicture}\hskip 1pt}
+%
+\newcommand{\Ld}{\Ldiamond}
+\newcommand{\jLdiamond}%
+{\begin{tikzpicture}[line width={0.4pt},scale=0.02\baselineskip]%
+\draw (0,0)--(1,0)--(0,1.4)--cycle;%
+\draw ((0.2,0.2)--(0.6,0.2)--(0.2,0.76)--cycle; \end{tikzpicture}\hskip 1pt}
+%
+\newcommand{\jLd}{\jLdiamond}
+
+\mode<presentation>
+\setbeamertemplate{navigation symbols}{}
+\usetheme{Boadilla}
+\usecolortheme[named={DarkGreen}]{structure}
+
+\makeatother
+\setbeamertemplate{footline}
+{
+  \leavevmode%
+  \hbox{%
+  \begin{beamercolorbox}[wd=.25\paperwidth,ht=2.25ex,dp=1ex,center]{author in head/foot}%
+    \usebeamerfont{author in head/foot}\insertshortauthor
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.45\paperwidth,ht=2.25ex,dp=1ex,center]{title in head/foot}%
+    \usebeamerfont{title in head/foot}\insertshorttitle
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.3\paperwidth,ht=2.25ex,dp=1ex,center]{date in head/foot}%
+  	\usebeamerfont{date in head/foot}\insertshortdate\hspace*{3em}
+    \insertframenumber{} / \inserttotalframenumber%\hspace*{1ex}
+  \end{beamercolorbox}}%
+  \vskip0pt%
+}
+\makeatletter
+
+%\useoutertheme{split}
+
+%\renewcommand{\emph}{\textit}
+
+\newtheorem{proposition}{Proposition}
+\newtheorem{question}{Question}
+
+
+\title{Subcomplete Forcing and Trees}
+\author{Kaethe Minden}
+\institute[GC CUNY]{Graduate Center, CUNY}
+\date[GSLC]{Graduate Student Logic Conference\\ May 12--13, 2016}
+
+\begin{document}
+\begin{frame}
+\titlepage
+\end{frame}
+
+\begin{frame}
+\begin{abstract} %Subcomplete forcing is a class of forcing notions introduced by Ronald Jensen. These forcings do not add reals but may change cofinalities to $\omega$, unlike proper forcings. Examples of subcomplete forcing include Namba forcing, Prikry forcing, and any countably closed forcing. 
+In this talk I will introduce subcompleteness, and we will familiarize ourselves with the definition by seeing it does not add reals. We will then see that subcomplete forcing does not add branches to $\omega_1$-trees, one of a handful of recent results examining the interaction between subcomplete forcing and $\omega_1$--trees. \end{abstract}
+\end{frame}
+
+\begin{frame}
+\frametitle{Subcomplete forcing} 
+Subcomplete forcing is a class of forcing notions defined by Ronald B. Jensen. Subcomplete forcing does not add reals, but may potentially alter cofinalities to $\omega$. %Defined at some point before 2012.
+\begin{block}{Known examples of subcomplete forcing}
+\begin{itemize}
+	\item \textbf{Countably closed forcing}.
+	\item \textbf{Namba forcing}, under $\textsf{CH}$, which forces the cofinality of $\omega_2$ to be $\omega$.
+	\item \textbf{Prikry forcing}, which forces a measurable cardinal to have cofinality $\omega$ while preserving cardinalities.
+	\item Certain kinds of \textbf{generalized diagonal Prikry forcing} which force a sequence of measurables to have cofinality $\omega$.
+	\item The forcing $\mathbb P_{\textbf{A}}$, which shoots a closed set of order type $\omega_1$ through a stationary set $A \subseteq \kappa$ of $\omega$-cofinal ordinals, and ultimately forces $\neg \Box_\kappa$.
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}
+\frametitle{The Standard Setup}
+
+We follow Jensen in his definitions of these classes of forcings, which takes some getting used to. 
+%First of all, in lieu of working with posets $\mathbb P$ contained in a large enough $H_\theta$ and its canonical well-order directly, as is usually done with semiproper forcing for example, here 
+In his standard setup, given a poset $\mathbb P$, we work with models $N$ of the form: $$H_\theta \subseteq N = \langle L_\tau[A], \in, A \cap L_\tau[A] \rangle  \models \textsf{ZFC}^-$$ for some $\tau > \theta$ and $A \subseteq \tau$, where $\theta$ is large enough so that $\mathbb P \in H_\theta$. 
+
+The reason for working with such models is that such $N$ will naturally contain well orders of $H_\theta$, among other useful bits of information like the Skolem functions of $H_\theta$.
+
+Furthermore, we will often take a countable substructure $X$ of $N$, and then the transitive collapse $\overline N$ of this structure. Embeddings arising from this procedure will be denoted $$\sigma: \overline N \cong X \prec N.$$
+
+For elements $s \in N$ we often write $\overline s$ for its preimage in $\overline N$, ie. $\sigma(\overline s)=s$.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Complete forcing}
+In order to define subcomplete forcing, we will first need to define Shelah's notion of complete forcings.
+%which turns out to be equivalent to countably closed forcings. The definiton of subcomplete forcing is a tweaking of this definition.
+Roughly speaking, complete forcings posit that below some condition, generics for countable substructures extend to generics for the larger structure.
+\begin{definition}
+$\mathbb P$ is \emph{\textbf{complete}} $\iff$ for sufficiently large $\theta$ we have; letting: \begin{itemize}
+	\item $\mathbb P \in H_\theta \subseteq N = L_\tau[A] \models \textsf{ZFC}^-, \tau>\theta$
+	\item $\sigma: \overline N \cong X \prec N$ where $X$ is countable and $\overline N$ is transitive
+\end{itemize}
+if $\overline G$ is $\overline{\mathbb P}$-generic over $\overline N$ 
+
+then there is $p \in \mathbb P$ such that whenever $G \ni p$ is $\mathbb P$-generic, $\sigma ``\, \overline G \subseteq G$. 
+
+In particular, this means $p$ forces that $\sigma$ lifts to an elementary embedding $$\sigma^*:\overline N[\overline G] \rightarrow N[G].$$
+\end{definition}
+\end{frame}
+
+\begin{frame}
+\frametitle{Complete forcing}
+\begin{proposition} If $\mathbb P$ is countably closed then $\mathbb P$ is complete.
+\end{proposition}
+\begin{proof} Let $\mathbb P$ be countably closed, and suppose we have $\theta >> |\mathbb P|$ satisfying the standard setup: \begin{itemize}
+	\item $\mathbb P \in H_\theta \subseteq N = L_\tau[A] \models \textsf{ZFC}^-, \tau>\theta$
+	\item $\sigma: \overline N \cong X \prec N$ where $X$ is countable and $\overline N$ is transitive
+\end{itemize}
+and let $\overline G \subseteq \overline{\mathbb P}$ be $\overline N$-generic. We can find such a $\overline G$ since $\overline N$ is countable. Take $p \leq \bigcup \sigma``\overline G$, which works since $\mathbb P$ is in fact countably directed closed.
+\end{proof}
+\end{frame}
+
+\begin{frame}
+\frametitle{Complete forcing}
+\begin{proposition}[Jensen] If $\mathbb P$ is complete, then $\mathbb P$ is equivalent to a countably closed poset. \end{proposition}
+\begin{proof}[Proof sketch]
+Let $\theta$ verify the completeness of $\mathbb P$. Define a poset $\mathbb Q$ of conditions $q = \langle X_q, G_q \rangle$ such that $\mathbb P, \theta \in X_q \prec N$ where $X_q$ is countable and $G_q$ is $\mathbb P$--generic over $X_q$. Let $$q \leq r \iff X_q \supseteq X_r \text{ and } G_r = G_q \cap X_r.$$ Clearly $\mathbb Q$ is countably closed. Define  $\pi: \mathbb Q \rightarrow \text{BA}(\mathbb P)$ by taking $\pi(q) = \cap G_q$. That $\cap G_q \neq \emptyset$ follows as $\mathbb P$ is complete. Also verify: \begin{itemize}
+	\item $q \leq r \implies \cap G_q \leq \cap G_r$ %If $q \leq r$ then $G_r \subseteq G_q$, so the desired result follows.
+	\item $q || r \iff \cap G_q \bigcap \cap G_r \neq \emptyset$  %If $s \leq q, r$ then $s \in G_q \cap G_r$. For the other direction, let $\cap G_q \bigcap \cap G_r \neq \emptyset$. Then let $X \prec H_\theta$ with $X$ countable, $X_q \cup X_r \subseteq X$, and $\cap G_q \bigcap \cap G_r \in X$. Since $X$ is countable we may obtain $G \subseteq \mathbb P$ $X$-generic, with $\cap G_q \bigcap \cap G_r \in G$. Then $\langle X,G \rangle \leq q,r$.
+	\item $D=\{ \cap G_q \;|\; q \in \mathbb Q \}$ is dense in $\mathbb P$ %Let $p \in \mathbb P$. Let $X \prec H_\theta$ with $X$ countable and $p \in X$. Then if $G$ is $X$-generic and contains $p$, $p \leq \cap G$ and $\cap G \in D$.
+\end{itemize}
+\end{proof}
+\end{frame}
+
+\begin{frame}
+\frametitle{Definition of subcompleteness}
+We now define subcomplete forcing. Generally speaking, instead of requiring the original embedding to lift we only ask that below some condition, there is an embedding sufficiently similar to the original one which lifts.
+\end{frame}
+
+\begin{frame}
+\begin{definition}
+$\mathbb P$ is \emph{\textbf{subcomplete}} $\iff$
+for sufficiently large $\theta$ we have; letting: \begin{itemize}
+	\item $\mathbb P \in H_\theta \subseteq N = L_\tau[A] \models \textsf{ZFC}^-, \tau>\theta$
+	\item $\sigma: \overline N \cong X \prec N$ where $X$ is countable and $\overline N$ is full~\footnote{Fullness is a strengthens transitivity and  is explained on the next slide.}
+	\item $\sigma(\overline \theta, \overline{\mathbb P}, \overline s)=\theta, \mathbb P, s$ for some $s \in N$;
+\end{itemize}
+if $\overline G$ is  $\overline{\mathbb P}$-generic over $\overline N$ then there is $p \in \mathbb P$ such that whenever $G \ni p$ is $\mathbb P$-generic, there is $\sigma_0 \in V[G]$ satisfying: \begin{enumerate}
+	\item $\sigma_0: \overline N \rightarrow N$ elementarily
+	\item $\sigma_0(\overline \theta, \overline{\mathbb P}, \overline s)=\theta, \mathbb P, s$
+	\item $\mathcal Sk^{N}(X \cup \mathbb P) = \mathcal Sk^{N}(\text{range}(\sigma_0) \cup \mathbb P)$~\footnote{This is a technical condition that is mostly only used in iteration theorems.}
+	\item $\sigma_0``\, \overline G \subseteq G$.
+\end{enumerate}
+In particular, $p$ forces that there is a $\sigma_0$ which lifts by \textbf{4} to an embedding $$\sigma_0^*:\overline N[\overline G] \rightarrow N[G].$$
+\end{definition}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Fullness}
+What is fullness, and why is it required?
+\begin{definition}
+$\overline N$ is \emph{\textbf{full}} $\iff$ $\overline N$ is transitive, $\omega \in \overline N$, and there is a $\gamma$ such that $L_\gamma(\overline N) \models \textsf{ZFC}^-$ and $\overline N$ has regular height in $L_\gamma(\overline N)$.
+\end{definition}
+
+\begin{itemize} 
+	\item If $\overline N$ is full, then $\overline N$ doesn't have definable Skolem functions; in particular it is not pointwise definable.
+	\item Thus, if $\overline N \cong X \prec N$, where $X$ is countable, $\overline N$ is full, and $N = L_\tau[A]$, there may be more than one elementary embedding $\sigma: \overline N \rightarrow N$.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Subcomplete forcing doesn't add reals.}
+\begin{proposition}[Jensen] If $\mathbb P$ is subcomplete, then $\mathbb P$ doesn't add any new reals. \end{proposition}
+\begin{block}{Proof.}
+Suppose toward a contradiction that $\mathbb P$ adds a new real. Let $q \in \mathbb P$ force that $\dot r: \check \omega \rightarrow 2$ is new. Let $\theta$ be large enough so that: \begin{itemize} 
+	\item $\mathbb P \in H_\theta \subseteq N = L_\tau[A] \models \textsf{ZFC}^-, \tau>\theta$
+	\item $\sigma: \overline N \cong X \prec N$ where $X$ is countable and $\overline N$ is full
+	\item $\sigma(\overline \theta, \overline{\mathbb P}, \overline q, \overline{\dot r})=\theta, \mathbb P, q, \dot r.$
+\end{itemize}
+Let $\overline G \subseteq \overline{\mathbb P}$ be an $\overline N$-generic filter with $\overline q \in \overline G$. Again, there is such a generic since $\overline N$ is countable. \end{block} 
+\end{frame}
+\begin{frame}
+%\frametitle{Subcomplete forcing doesn't add reals}
+\begin{proof}[Proof continued.] By subcompleteness of $\mathbb P$, there is $p \in \mathbb P$ which forces that whenever $G \ni p$ is $\mathbb P$-generic, there is $\sigma_0 \in V[G]$ such that \begin{itemize}
+	\item $\sigma_0: \overline N \rightarrow N$ elementarily
+	\item $\sigma_0(\overline \theta, \overline{\mathbb P}, \overline q, \overline{\dot r})=\theta, \mathbb P, q, \dot r$
+	\item $\sigma_0``\, \overline G \subseteq G$.
+\end{itemize}
+
+Thus $\sigma_0$ lifts to $\sigma^*_0:\overline N[\overline G] \prec N[G]$ in $V[G]$. Let $r = \dot r^G$, $\overline r = \overline{\dot r}^{\overline G}$. Then for each $n < \omega$ we have that $$r(n) = \sigma^*_0(\overline r(n)) = \overline r(n) \in V,$$ contradicting our original assumption that $q \in G$ forces $\dot r$ to be new. %
+\end{proof}
+The idea here is that $\overline N$ is countable, so the critical point of $\sigma^*_0$, and indeed of any such $\sigma$ or $\sigma_0$, is $\omega_1^{\overline N}$.
+\end{frame}
+
+\begin{frame}
+\frametitle{Subcomplete forcing doesn't add branches}
+\begin{theorem}[Fuchs, M.] Let $T$ be an $\omega_1$-tree. If $\mathbb P$ is subcomplete then $\mathbb P$ does not add new cofinal branches to $T$.
+\end{theorem}
+Some results immediately follow.
+\begin{block}{Corollary}
+Subcomplete forcing preserves Aronszajn trees.
+\end{block}
+\begin{block}{Corollary}
+If an $\omega_1$-tree is not Kurepa, it cannot become Kurepa in a subcomplete forcing extension.
+\end{block}
+\end{frame}
+
+\begin{frame}
+\frametitle{Subcomplete forcing doesn't add branches}
+This proof is a forcing argument which uses a standard lifting technique in the context of small embeddings.
+\begin{block}{Proof sketch (of Theorem)}
+Assume not. Let $q$ be a condition forcing that $\dot b$ is a new cofinal branch through $\check T$. 
+Let $\theta$ be large enough so that: \begin{itemize} 
+	\item $\mathbb P \in H_\theta \subseteq N = L_\tau[A] \models \textsf{ZFC}^-, \tau>\theta$
+	\item $\sigma: \overline N \cong X \prec N$ where $X$ is countable and $\overline N$ is full
+	\item $\sigma(\overline \theta, \overline{\mathbb P}, \overline T, \overline q, \overline{\dot b}) = \theta, \mathbb P, T, q, \dot b$. 
+\end{itemize}
+By elementarity, $\overline q$ forces $\overline{\dot b}$ to be a new cofinal branch through $\check{\overline T}$.
+
+Let $\alpha=\omega_1^{\overline N}$. Note that $\text{cp}(\sigma)=\alpha$.
+
+The idea is to construct a generic $\overline G$ for $\overline{\mathbb P}$ over $\overline N$, using the countability of $\overline N$ to diagonalize against all branches through $T$ as seen on level $\alpha$ of the tree in $N$.
+\end{block}
+\end{frame}
+
+\begin{frame}
+\begin{block}{Proof sketch continued.}
+In particular since $\alpha$ is countable we may enumerate the branches on level $\alpha$ of $T$ in $N$. Also list the dense sets of $\overline{\mathbb P}$ in $\overline N$. 
+
+Then inductively define a sequence of conditions of the form $\overline q_n$, where $\overline q_0 = \overline q$, deciding values of $\overline{\dot b}$ in $\overline T$ differently than the $n$th branch we named. Ensure along the way that $\overline q_n$ gets in the $n$th dense set from our list, and extends the previous condition.
+
+\begin{center}
+\begin{tikzpicture}
+\draw (-3,0)--(-4,2)--(-2,2)--(-3,0);
+%\draw[very thick,color=brown] (-3,0)--(-2.9,0.6)--(-3,1.5)--(-2.7,2);
+%\node [left,color=brown] at (-3,1.5) {$\overline b$};
+\node [above] at (-3,2) {$\overline T$};
+\draw[very thick, dotted, color=red] (-3,0)--(-2.9,0.6)--(-3,1.5)--(-2.7,2);
+\node [right] at (-2,2) {$\alpha = \omega_1^{\overline N}$};
+\draw[color=brown] (-3,0)--(-3.2,1)--(-3.7,2);
+\draw[color=brown] (-3,0)--(-3.1,0.9)--(-3,2);
+\draw[color=brown] (-3,0)--(-2.9,0.8)--(-2.7,1.4)--(-2.6,2);
+\draw[color=brown] (-3,0)--(-2.6,1)--(-2.3,2);
+%\draw[->, thick] (-1,1)--(1,1);
+\draw [->, color = teal, thick] (-1,1) arc [radius=2, start angle=140, end angle= 75];
+\node [above right, color=teal] at (0,1.7) {$\sigma$};
+\draw (3,0)--(1,4)--(5,4)--(3,0);
+\draw[densely dotted] (2, 2)--(4,2);
+\draw[very thick, color=brown] (3,0)--(2.8,1)--(2.3,2);
+\draw[color=brown] (2.3,2)--(2.3,3.2);
+\draw[very thick, color=brown] (3,0)--(2.9,0.9)--(3,2);
+\draw[color=brown] (3,2)--(2.5, 3)--(3,3.7);
+\draw[very thick, color=brown] (3,0)--(3.1,0.8)--(3.3,1.4)--(3.4,2);
+\draw[color=brown] (3.4,2)--(3.3, 2.5);
+\draw[very thick, color=brown] (3,0)--(3.4,1)--(3.7,2);
+\draw[color=brown] (3.7,2)--(4.2,3)--(4.5,3.8);
+%\node [left, color=brown] at (2.7,3) {$b$};
+\node [above] at (3,4) {$T$};
+\node [right] at (4,2) {$\alpha$};
+\node [right] at (5,4) {$\omega_1$};
+\end{tikzpicture}
+$\overline T = T \upharpoonright \alpha$
+\end{center}
+\end{block}
+\end{frame}
+
+%The construction may go as follows: Let $\overline p_0 := \overline p \in \overline N$. For each $n < \omega$, note that there must be two conditions $\overline p^0_{n+1} \perp \overline p^1_{n+1}$, both extending $\overline p_n$, which decide the value of the branch $\overline{\dot b}$ at some point to be different. Say $\overline p^1_{n+1} \Vdash \check x_{n} \in \overline{\dot b}$ and $\overline p^0_{n+1} \Vdash \check x_n \notin \overline{\dot b}$. Let $\overline p_{n+1}$ be a condition in $\overline D_n$ extending $\overline p^1_{n+1}$ if $x_n \notin b_n$ (this would be considered in $N$), and $\overline p^0_{n+1}$ otherwise. 
+\begin{frame}
+\begin{block}{Proof sketch continued.}
+Let $\overline G$ be the generic filter generated by the $\overline q_n$, let $\overline{\dot b}^{\overline G} = \overline b$.
+Since $\mathbb P$ is subcomplete, there is a condition $p \in \mathbb P$ such that whenever $G$ is $\mathbb P$-generic with $p \in G$, we have $\sigma_0 \in V[G]$ such that: \begin{itemize}
+	\item $\sigma_0: \overline N \rightarrow N$ elementarily
+	\item $\sigma_0(\overline \theta, \overline{\mathbb P}, \overline T, \overline q, \overline{\dot b}) = \theta, \mathbb P, T, q, \dot b$
+	\item $\sigma_0``\, \overline G \subseteq G$.
+\end{itemize} 
+So there is a lift $\sigma_0^*:\overline N[\overline G] \rightarrow N[G]$ elementary, extending $\sigma_0$, with $\sigma_0^*(\overline b) = \sigma_0(\overline{\dot b})^G=\dot b^G = b$, and $\sigma_0^*(\overline T) = \sigma_0(\overline T)^G=T$. Now we have $N[G] \models q \in G$, so $b$ is a cofinal branch through $T$.
+\end{block}
+\end{frame}
+
+\begin{frame}
+\begin{proof}[Proof sketch continued.]
+\begin{center}
+\begin{tikzpicture}
+\draw (-3,0)--(-4,2)--(-2,2)--(-3,0);
+\draw[very thick,color=red] (-3,0)--(-2.9,0.6)--(-3,1.5)--(-2.7,2);
+\node [left,color=red] at (-3,1.5) {$\overline b$};
+\node [above] at (-3,2) {$\overline T$};
+\node [right] at (-2,2) {$\alpha = \omega_1^{\overline N}$};
+%\draw[->, thick] (-1,1)--(1,1);
+\draw [->, color = teal, thick] (-1,1) arc [radius=2, start angle=140, end angle= 75];
+\node [above right, color=teal] at (-0.2,1.7) {$\sigma_0^*$};
+\draw (3,0)--(1,4)--(5,4)--(3,0);
+\draw[densely dotted] (2, 2)--(4,2);
+
+\draw[color=brown] (3,0)--(2.8,1)--(2.3,2);
+\draw[color=brown] (2.3,2)--(2.3,3.2);
+\draw[color=brown] (3,0)--(2.9,0.9)--(3,2);
+\draw[color=brown] (3,2)--(2.5, 3)--(3,3.7);
+\draw[color=brown] (3,0)--(3.1,0.8)--(3.3,1.4)--(3.4,2);
+\draw[color=brown] (3.4,2)--(3.3, 2.5);
+\draw[color=brown] (3,0)--(3.4,1)--(3.7,2);
+\draw[color=brown] (3.7,2)--(4.2,3)--(4.5,3.8);
+
+\draw[very thick, color=red] (3,0)--(3.1,0.6)--(3,1.5)--(3.3,2);
+\draw[color=red] (3.3,2)--(3, 3)--(3.5,4);
+\node [left, color=red] at (3,3) {$b$};
+\node [above] at (3,4) {$T$};
+\node [right] at (4,2) {$\alpha$};
+\node [right] at (5,4) {$\omega_1$};
+\end{tikzpicture}
+%$$\overline T = T \upharpoonright \omega_1^{\overline N}$$
+\end{center}
+Since $\alpha$ is the critical point of the embedding, in $N[G]$, $b \upharpoonright \alpha = \overline b$. However, $\overline b$ was constructed so as to not be equal to any branch restricted to level $\alpha$, the ones we listed out initially, a contradiction.
+\end{proof}
+\end{frame}
+
+\begin{frame}
+\frametitle{Further results}
+\begin{theorem}[Jensen] If $\mathbb P$ is subcomplete and $T$ is a Suslin tree, then $T$ is Suslin in $V[G]$. \end{theorem}
+\begin{block}{Some related results (Fuchs, M.)} \begin{itemize}
+	\item $ccc$ forcings are not subcomplete.
+	\item Subcomplete forcing may add maximal antichains to $\omega_1$--trees.
+	\item Subcomplete forcing preserves the unique branch, or the Suslin-off-a-generic-branch property, of a Suslin tree.
+	%\item If $T$ is a Suslin tree which is Suslin off the generic branch, then any subcomplete forcing will force $T$ to be Suslin off the generic branch.
+	\item If $\text{cof}\,(\kappa)=\omega_1$ then subcomplete forcing cannot add a thread to a $\square(\kappa, \omega)$ sequence.
+	\end{itemize}\end{block}	
+\begin{block}{Open Question}
+Can subcomplete forcing add branches to wide trees of height $\omega_1$?
+\end{block}
+\end{frame}
+
+
+
+\begin{frame}
+\begin{center}
+Thank you.
+\end{center}
+\end{frame}
+
+\end{document}
